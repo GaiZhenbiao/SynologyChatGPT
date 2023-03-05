@@ -184,3 +184,8 @@ sudo nohup python manage.py runserver <port>
 ```
 
 然后，你就可以愉快地开始使用啦！
+
+## 赞助
+
+感谢 [rashida](https://github.com/RashidaKAKU) 的慷慨赞助
+

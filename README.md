@@ -125,7 +125,7 @@ sudo nohup python manage.py runserver <port>
 
 |  字段名   | 内容  |
 |  ----  | ----  |
-| 命令  | setsavedir |
+| 命令  | getsavedir |
 | 命令说明  | 获取自动保存的目录路径 |
 | 描述  | 返回当前自动保存的目录 |
 

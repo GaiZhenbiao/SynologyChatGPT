@@ -148,7 +148,7 @@ sudo nohup python manage.py runserver <port>
 
 然后，需要设定你的OpenAI API密钥。
 
-``
+```
 /setapikey <OpenAI API Key>
 ```
 

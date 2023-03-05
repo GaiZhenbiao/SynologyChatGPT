@@ -10,9 +10,10 @@ class ChatGPTConfiguration(models.Model):
     bot_Key = models.CharField(max_length=200)
     history = models.TextField(default="[]")
     total_token = models.IntegerField(default=0)
+    base_url = models.CharField(max_length=256)
 
     def bot_url(self):
-        return f"https://rashida.cab:5001/webapi/entry.cgi?api=SYNO.Chat.External&method=chatbot&version=2&token=%22{self.bot_Key}%22"
+        return f"{self.base_url}/webapi/entry.cgi?api=SYNO.Chat.External&method=chatbot&version=2&token=%22{self.bot_Key}%22"
 
     def get_history(self):
         return json.loads(self.history)

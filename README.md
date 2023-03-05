@@ -38,7 +38,7 @@ sudo python manage.py runserver <port>
 sudo nohup python manage.py runserver <port>
 ```
 
-现在服务器就在后台执行，可以关闭SSH窗口了。（注意不要按`Ctrl C`中断nohup执行）
+现在服务器就在后台执行，可以关闭SSH窗口了。（注意不要按`Ctrl C`中断`nohup`执行）
 
 ## 创建斜杠命令和机器人。
 
@@ -126,7 +126,7 @@ sudo nohup python manage.py runserver <port>
 
 ### 开始使用
 
-本项目支持多用户。因此，第一次使用时，需要创建ChatGPT机器人用户。使用`/newuser`命令创建。可以在此时指定BaseURL与BotKey，也可以稍后指定。
+本项目支持多用户。因此，第一次使用时，需要创建ChatGPT机器人用户。使用`/newuser`命令创建。可以在此时指定`BaseURL`与`BotKey`，也可以稍后指定。`BaseURL`是群晖面板的URL，如`https://www.example.com:5001`，注意最后没有斜线`/`。`BotKey`是机器人的令牌。
 
 ```
 /newuser <(可选)BaseURL> <(可选)BotKey>

@@ -130,7 +130,7 @@ def predict(request):
     # execute the chatgpt_reply function in background
     thread1 = Thread(target=chatgpt_reply, args=(data["user_id"], data["text"]), daemon=True)
     thread1.start()
-    return HttpResponse(message)
+    return
 
 @csrf_exempt
 def read_webhook(request):
@@ -242,4 +242,4 @@ def read_webhook(request):
     else:
         message = "未知指令: " + data["text"]
     post_reply(config.bot_url(), message, data["user_id"])
-    return HttpResponse(message)
+    return

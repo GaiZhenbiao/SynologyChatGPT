@@ -26,7 +26,14 @@ sudo pip install -r requirements.txt
 
 ## 运行服务器
 
-在项目目录下，执行
+在项目目录下，依次执行以下两条命令，创建数据库：
+
+```
+sudo python manage.py makemigrations chat
+sudo python manage.py migrate
+```
+
+然后执行下面的命令启动服务器：
 
 ```
 sudo python manage.py runserver <port>
@@ -168,6 +175,12 @@ sudo nohup python manage.py runserver <port>
 
 ```
 /setapikey <OpenAI API Key>
+```
+
+如果你想使用将当前聊天记录保存成文件的功能，还需要配置默认文件保存文件夹的路径，路径中不允许含有空格：
+
+```
+/setsavedir /path/to/your/dir
 ```
 
 然后，你就可以愉快地开始使用啦！

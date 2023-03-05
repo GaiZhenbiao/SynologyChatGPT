@@ -11,6 +11,7 @@ class ChatGPTConfiguration(models.Model):
     history = models.TextField(default="[]")
     total_token = models.IntegerField(default=0)
     base_url = models.CharField(max_length=256, default="http://127.0.0.1:5001")
+    default_save_path = models.CharField(max_length=256, default="")
 
     def bot_url(self):
         return f"{self.base_url}/webapi/entry.cgi?api=SYNO.Chat.External&method=chatbot&version=2&token=%22{self.bot_Key}%22"

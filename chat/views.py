@@ -7,6 +7,8 @@ import json
 import openai
 import traceback
 from threading import Thread
+import os
+import datetime
 
 # Create your views here.
 
@@ -95,6 +97,29 @@ def chatgpt_reply(user_id, text, precut = 0, retry = False):
         traceback.print_exc()
         post_reply(config.bot_url(), "发生了未知错误Orz", user_id)
 
+def save_as(file_name, user_id):
+    message = "保存文件的默认提示"
+    try:
+        config = ChatGPTConfiguration.objects.get(user_id=user_id)
+        if config.default_save_path == "":
+            message = "请先设置保存路径"
+            return message
+        file_name = file_name + ".txt"
+        context = config.get_history()
+        chat_messages = []
+        for i in range(len(context)):
+            chat_messages.append(f"{context[i]['role']}: " +context[i]["content"])
+        try:
+            file_path = os.path.join(config.default_save_path, file_name)
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write("\n".join(chat_messages))
+            message= f"历史记录已保存: {file_path}"
+        except Exception as e:
+            message = "在保存历史记录时发生了错误: " + str(e)
+    except Exception as e:
+        message = "在保存历史记录时发生了错误: " + str(e)
+    return message
+
 @csrf_exempt
 def predict(request):
     message = "ok"
@@ -119,22 +144,22 @@ def read_webhook(request):
             config = ChatGPTConfiguration.objects.get(user_id=data['user_id'])
             config.clear_history()
             message = "历史记录已清空"
-        except:
-            message = "在清空历史记录时发生了错误"
+        except Exception as e:
+            message = f"在清空历史记录时发生了错误: {e}"
     elif "totaltoken" in data["text"]:
         try:
             config = ChatGPTConfiguration.objects.get(user_id=data['user_id'])
             message = f"总token用量: {config.total_token}"
-        except:
-            message = "在获取总token用量时发生了错误"
+        except Exception as e:
+            message = f"在获取总token用量时发生了错误: {e}"
     elif "retry" in data["text"]:
         try:
             config = ChatGPTConfiguration.objects.get(user_id=data['user_id'])
             message = "正在重试……"
             thread2 = Thread(target=chatgpt_reply, args=(data["user_id"], "Anything", 0, True), daemon=True)
             thread2.start()
-        except:
-            message = "在重试时发生了错误"
+        except Exception as e:
+            message = f"在重试时发生了错误: {e}"
     elif "whoami" in data["text"]:
         try:
             config = ChatGPTConfiguration.objects.get(user_id=data['user_id'])
@@ -164,42 +189,50 @@ def read_webhook(request):
             config.save()
             message = "API-key已设置: " + data["text"].split(" ")[1]
         except:
-            message = "在设置API-key时发生了错误"
+            message = f"在设置API-key时发生了错误: {e}"
     elif "setbotkey" in data["text"]:
         try:
             config = ChatGPTConfiguration.objects.get(user_id=data['user_id'])
             config.bot_Key = data["text"].split(" ")[1]
             config.save()
             message = "bot-key已设置: " + data["text"].split(" ")[1]
-        except:
-            message = "在设置bot-key时发生了错误"
+        except Exception as e:
+            message = f"在设置bot-key时发生了错误: {e}"
     elif "setbaseurl"  in data["text"]:
         try:
             config = ChatGPTConfiguration.objects.get(user_id=data['user_id'])
             config.base_url = data["text"].split(" ")[1]
             config.save()
             message = "base-url已设置: " + data["text"].split(" ")[1]
-        except:
-            message = "在设置base-url时发生了错误"
-    elif "save" in data["text"]:
+        except Exception as e:
+            message = f"在设置base-url时发生了错误: {e}"
+    elif "setsavedir" in data["text"]:
         try:
             config = ChatGPTConfiguration.objects.get(user_id=data['user_id'])
-            file_path = data["text"].split(" ")[1]
-            context = config.save_history()
-            chat_messages = []
-            for i in range(len(context)):
-                if i%2 == 0:
-                    chat_messages.append("User: " +context[i]["content"])
-                else:
-                    chat_messages.append("ChatGPT: " + context[i]["content"])
-            try:
-                with open(file_path, "w", encoding="utf-8") as f:
-                    f.write("\n".join(chat_messages))
-                message= "历史记录已保存"
-            except Exception as e:
-                message = "在保存历史记录时发生了错误: " + str(e)
-        except:
-            message = "在保存历史记录时发生了错误"
+            config.default_save_path = data["text"].split(" ")[1]
+            config.save()
+            message = "保存目录已设置: " + data["text"].split(" ")[1]
+        except Exception as e:
+            message = f"在设置保存目录时发生了错误: {e}"
+    elif "getsavedir" in data["text"]:
+        try:
+            config = ChatGPTConfiguration.objects.get(user_id=data['user_id'])
+            message = "当前保存目录为: " + config.default_save_path
+        except Exception as e:
+            message = f"在获取保存目录时发生了错误: {e}"
+    elif "saveas" in data["text"]:
+        try:
+            file_name = data["text"].split(" ")[1]
+            message = save_as(file_name, data["user_id"])
+        except Exception as e:
+            message = "在将要保存历史记录时发生了错误: " + str(e)
+    elif "savenow" in data["text"]:
+        # use current system time as file name
+        try:
+            file_name = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + ".txt"
+            message = save_as(file_name, data["user_id"])
+        except Exception as e:
+            message = "自动保存历史记录时发生了错误: " + str(e)
     else:
         message = "未知指令: " + data["text"]
     post_reply(config.bot_url(), message, data["user_id"])

@@ -242,5 +242,7 @@ def read_webhook(request):
             message = "自动保存历史记录时发生了错误: " + str(e)
     else:
         message = "未知指令: " + data["text"]
-    post_reply(config.bot_url(), message, data["user_id"])
+    # post_reply(config.bot_url(), message, data["user_id"])
+    thread4 = Thread(target=post_reply, args=(config.bot_url(), message, data["user_id"]), daemon=True)
+    thread4.start()
     return HttpResponse(status=200)

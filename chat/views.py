@@ -148,13 +148,15 @@ def read_webhook(request):
         except:
             config = ChatGPTConfiguration(user_id=data['user_id'])
             try:
-                bot_key = data["text"].split(" ")[1]
+                base_url = bot_key = data["text"].split(" ")[1]
+                bot_key = data["text"].split(" ")[2]
                 config.bot_Key = bot_key
+                config.base_url = base_url
                 config.save()
                 message = "新用户已创建，用户ID为" + str(config.user_id) + "BOT-Key 为：" + bot_key + "，请设置API-Key"
             except:
                 config.save()
-                message = f"新用户(ID: {data['user_id']})创建成功。没有指定bot-key。"
+                message = f"新用户(ID: {data['user_id']})创建成功。由于未同时指定bot-key与API-Key，未设置这两项属性。"
     elif "setapikey" in data["text"]:
         try:
             config = ChatGPTConfiguration.objects.get(user_id=data['user_id'])

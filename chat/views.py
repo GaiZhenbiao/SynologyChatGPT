@@ -118,7 +118,7 @@ def save_as(file_name, user_id):
             message = "在保存历史记录时发生了错误: " + str(e)
     except Exception as e:
         message = "在保存历史记录时发生了错误: " + str(e)
-    return message
+    post_reply(config.bot_url(), message, user_id)
 
 @csrf_exempt
 def predict(request):
@@ -223,14 +223,18 @@ def read_webhook(request):
     elif "saveas" in data["text"]:
         try:
             file_name = data["text"].split(" ")[1]
-            message = save_as(file_name, data["user_id"])
+            # save_as(file_name, data["user_id"])
+            thread3 = Thread(target=save_as, args=(file_name, data["user_id"]), daemon=True)
+            thread3.start()
         except Exception as e:
             message = "在将要保存历史记录时发生了错误: " + str(e)
     elif "savenow" in data["text"]:
         # use current system time as file name
         try:
             file_name = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + ".txt"
-            message = save_as(file_name, data["user_id"])
+            # save_as(file_name, data["user_id"])
+            thread3 = Thread(target=save_as, args=(file_name, data["user_id"]), daemon=True)
+            thread3.start()
         except Exception as e:
             message = "自动保存历史记录时发生了错误: " + str(e)
     else:

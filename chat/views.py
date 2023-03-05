@@ -104,7 +104,8 @@ def save_as(file_name, user_id):
         if config.default_save_path == "":
             message = "请先设置保存路径"
             return message
-        file_name = file_name + ".txt"
+        if not file_name.endswith(".txt"):
+            file_name = file_name + ".txt"
         context = config.get_history()
         chat_messages = []
         for i in range(len(context)):

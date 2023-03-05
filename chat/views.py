@@ -222,6 +222,7 @@ def read_webhook(request):
             message = f"在获取保存目录时发生了错误: {e}"
     elif "saveas" in data["text"]:
         try:
+            message = "保存聊天记录中……"
             file_name = data["text"].split(" ")[1]
             # save_as(file_name, data["user_id"])
             thread3 = Thread(target=save_as, args=(file_name, data["user_id"]), daemon=True)
@@ -231,6 +232,7 @@ def read_webhook(request):
     elif "savenow" in data["text"]:
         # use current system time as file name
         try:
+            message = "保存聊天记录中……"
             file_name = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + ".txt"
             # save_as(file_name, data["user_id"])
             thread3 = Thread(target=save_as, args=(file_name, data["user_id"]), daemon=True)

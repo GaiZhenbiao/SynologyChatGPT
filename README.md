@@ -114,7 +114,7 @@ sudo nohup python manage.py runserver <port>
 |  ----  | ----  |
 | 命令  | save |
 | 命令说明  | 保存目前与ChatGPT的聊天到txt文件 |
-| 描述  | 接受一个参数：/volume1/path/to/your/file.txt |
+| 描述  | 接受一个参数：/volume1/path/to/your/file.txt 文件路径中不可以有空格 |
 
 ### 然后创建机器人。
 

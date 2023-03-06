@@ -39,7 +39,7 @@ sudo python manage.py migrate
 sudo python manage.py runserver <port>
 ```
 
-在`<port>`中填入你指定的端口。注意，`port`是一个数字，不包含尖括号，如`1999`。如果服务器启动正常（没有端口冲突），按`Ctrl C`中断服务器。然后执行。
+在`<port>`中填入你指定的端口。注意，`<port>`是一个数字，不包含尖括号，如`1999`。如果服务器启动正常（没有端口冲突），按`Ctrl C`中断服务器。然后执行。
 
 ```
 sudo nohup python manage.py runserver <port>

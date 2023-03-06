@@ -16,6 +16,10 @@ ChatGPT client for Synology Chat, written with Django
 
 群晖安装的 `python3` 没有自带 `pip`，请参照[这篇文章](https://homepea.top/2020/35.DSM-Synology-pip/)安装。下面假设你为 `root` 用户安装了`pip`，因为普通用户会遇到权限问题。
 
+### 版本说明
+
+如果你执行提示语法错误/其他错误，首先试试把命令中的`python`和`pip`换成`python3` 和 `pip3`。你的`python`可能是python2。
+
 ### 安装依赖
 
 在项目目录下，执行
@@ -192,4 +196,3 @@ sudo nohup python manage.py runserver <port>
 ## 赞助
 
 感谢 [rashida](https://github.com/RashidaKAKU) 的慷慨赞助
-

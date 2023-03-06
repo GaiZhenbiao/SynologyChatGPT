@@ -187,7 +187,7 @@ sudo nohup python manage.py runserver <port>
 
 ## 已知问题
 
-在使用saveas和savenow命令时，Chat会提示机器人不可用，然后收到保存成功的提示。
+在使用`saveas`和`savenow`命令时，Chat会提示机器人不可用，然后收到保存成功的提示。文件可以正常保存
 
 ## 赞助
 

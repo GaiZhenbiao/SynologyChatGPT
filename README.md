@@ -30,6 +30,8 @@ sudo pip install -r requirements.txt
 
 ## 运行服务器
 
+如果本项目不部署在群晖上，会遇到`HTTP 400`错误。解决方案请参考这个Issue：[#4](https://github.com/GaiZhenbiao/SynologyChatGPT/issues/4)
+
 在项目目录下，依次执行以下两条命令，创建数据库：
 
 ```

@@ -35,7 +35,7 @@ def get_response(context, openAI_API_Key):
         model="gpt-3.5-turbo",
         messages=context,
     )
-    return {"role": "assistant", "content": get_message(response) }, response["usage"]["total_tokens"]
+    return {"role": "assistant", "content": get_message(response) }, response["usage"]["totalTokens"]
 
 def preprocess(x):
     x = x.decode()
@@ -174,8 +174,10 @@ def read_webhook(request):
         except:
             config = ChatGPTConfiguration(user_id=data['user_id'])
             try:
-                base_url = bot_key = data["text"].split(" ")[1]
-                bot_key = data["text"].split(" ")[2]
+                # TODO: use regex to parse params
+                params = data["text"].split(" ")
+                base_url = params[1]
+                bot_key = params[2]
                 config.bot_Key = bot_key
                 config.base_url = base_url
                 config.save()

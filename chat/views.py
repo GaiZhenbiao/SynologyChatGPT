@@ -1,3 +1,4 @@
+from urllib.parse import quote
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import ChatGPTConfiguration
@@ -24,10 +25,22 @@ def post_reply(url, reply, user_id):
             tmp_messages = [line]
     if tmp_messages != []:
         messages.append("\n".join(tmp_messages))
+    headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
     for message in messages:
-        body = 'payload=' + json.dumps({"text": message, "user_ids": [user_id]})
         print(f"发送的消息为：{message}")
-        requests.post(url, body)
+        body = 'payload=' + quote(json.dumps({"text": message, "user_ids": [user_id]}))
+        try:
+            res=requests.post(url=url,headers=headers, data=body)
+            res.raise_for_status()
+            if res.json()['success']:
+                print('发送成功')
+            else:
+                print(f'发送失败: {res.text}')
+        except Exception as exc:
+            print(f'发送请求失败: {exc}')
+
 
 def get_response(context, openAI_API_Key):
     openai.api_key = openAI_API_Key
@@ -35,7 +48,7 @@ def get_response(context, openAI_API_Key):
         model="gpt-3.5-turbo",
         messages=context,
     )
-    return {"role": "assistant", "content": get_message(response) }, response["usage"]["total_tokens"]
+    return {"role": "assistant", "content": get_message(response) }, response["usage"]["totalTokens"]
 
 def preprocess(x):
     x = x.decode()
@@ -75,9 +88,8 @@ def chatgpt_reply(user_id, text, precut = 0, retry = False):
         context.append(response)
         print(f"新的context长度为 {len(context)}")
         config.save_history(context, tokencount)
-        post_reply(config.bot_url(), response["content"], user_id)
         print("发送回复中……")
-        print("发送成功")
+        post_reply(config.bot_url(), response["content"], user_id)
     except openai.error.AuthenticationError:
         print("API-key错误")
         post_reply(config.bot_url(), "请求失败，请检查API-key是否正确。", user_id)
@@ -174,8 +186,10 @@ def read_webhook(request):
         except:
             config = ChatGPTConfiguration(user_id=data['user_id'])
             try:
-                base_url = bot_key = data["text"].split(" ")[1]
-                bot_key = data["text"].split(" ")[2]
+                # TODO: use regex to parse params
+                params = data["text"].split(" ")
+                base_url = params[1]
+                bot_key = params[2]
                 config.bot_Key = bot_key
                 config.base_url = base_url
                 config.save()

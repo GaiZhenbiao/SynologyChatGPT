@@ -10,11 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+# Path to data directory, default to BASE_DIR for compatibility
+DATA_DIR = Path(os.environ.get('APP_DATA_DIR', BASE_DIR))
+Path.mkdir(DATA_DIR, exist_ok=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -25,7 +28,9 @@ SECRET_KEY = 'django-insecure-l$!kt6kqvian+$t@_!x)snyari%+(#$!66oavkk5u8#i@v@-8g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["stream.gzblog.tech", "127.0.0.1"]
+# Allow hosts from environment variable, default to 127.0.0.1
+ALLOWED_HOSTS = ["stream.gzblog.tech"]
+ALLOWED_HOSTS.extend(os.environ.get('APP_ALLOWED_HOSTS', default='127.0.0.1').split(','))
 
 
 # Application definition
@@ -77,7 +82,7 @@ WSGI_APPLICATION = 'SynologyChatGPT.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DATA_DIR / 'db.sqlite3',
     }
 }
 

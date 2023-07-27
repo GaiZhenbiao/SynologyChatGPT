@@ -6,6 +6,8 @@ ChatGPT client for Synology Chat, written with Django
 
 <img width="1220" alt="截屏2023-03-05 16 48 49" src="https://user-images.githubusercontent.com/51039745/222951973-29b72e61-19e6-47cf-9f24-5bd82c1bf20d.png">
 
+如果你想通过 docker 使用本项目，请参考这里的说明：https://github.com/GaiZhenbiao/SynologyChatGPT/pull/14
+
 ## 安装依赖
 
 ### 安装 Python

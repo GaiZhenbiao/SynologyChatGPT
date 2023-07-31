@@ -48,7 +48,14 @@ def get_response(context, openAI_API_Key):
         model="gpt-3.5-turbo",
         messages=context,
     )
-    return {"role": "assistant", "content": get_message(response) }, response["usage"]["totalTokens"]
+    total_tokens = -1
+    if 'total_tokens' in response["usage"]:
+        total_tokens = int(response["usage"]["total_tokens"])
+    elif 'totalTokens' in response["usage"]:
+        total_tokens = int(response["usage"]["totalTokens"])
+    else:
+        print("""Cant't find total_tokens or totalTokens in response["usage"]""")
+    return {"role": "assistant", "content": get_message(response) }, total_tokens
 
 def preprocess(x):
     x = x.decode()

@@ -7,5 +7,5 @@ docker run --rm \
     -p 60000:8000 \
     --name $container_name \
     -v $(pwd)/data:/app/data \
-    -e OPENAI_API_BASE=https://openai-service.mbmzone.com/v1 \
+    -e OPENAI_API_BASE=https://api.openai.com/v1 \ # Set custom OpenAI API base
     image_name
